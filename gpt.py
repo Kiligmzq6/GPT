@@ -1,20 +1,20 @@
 import openai
 
 class Chat:
-    def __init__(self,api_key,system_setting = None,language = "中文",model="gpt-3.5-turbo") -> None:        
+    def __init__(self, api_key, system_setting=None, language="中文", model="gpt-3.5-turbo") -> None:
 
         # Apply the API key
         openai.api_key = api_key
 
         # 初始化对话列表，加入一个key为system的字典，有助于形成更加个性化的回答
-        self.system_setting_list = [{'role':'system','content': f"以下的所有问题请用{language}回答"}]
+        self.system_setting_list = [{'role': 'system', 'content': f"以下的所有问题请用{language}回答"}]
         if system_setting:
-            self.system_setting_list.append({'role':'system','content': system_setting})
-            #添加系统设置
+            self.system_setting_list.append({'role': 'system', 'content': system_setting})
+            # 添加系统设置
         self.conversation_list = []
-        #对话记录
+        # 对话记录
         self.model = model
-    
+
     # 打印对话
     def show_conversation(self):
         for msg in self.conversation_list:
@@ -24,36 +24,44 @@ class Chat:
                 print(f"\U0001f47D: {msg['content']}\n")
             else:
                 print(f"\U0001f47c: {msg['content']}\n")
-    
-    #清空历史会话
+
+    # 清空历史会话
     def clear_conversation(self):
         del self.conversation_list
         self.conversation_list = []
-        
-    def generate_prompt(prompt,ask_type = None):
+
+    def generate_prompt(self,prompt, ask_type=None):
         """
         ask_type:问题类型
         """
-        #这部分函数有待更新
+        # 这部分函数有待更新
         tail_message = "列出你所参考的资料来源,请你一步一步来,并仔细思考你的行为逻辑,核查你输出的信息。"
-        prompt = prompt+tail_message
+        prompt = prompt + tail_message
         return prompt
-    
-    def get_answer(self,messages):
-        response = openai.ChatCompletion.create(model=self.model,messages=messages)
+
+    def get_answer(self, messages):
+        response = openai.ChatCompletion.create(model=self.model, messages=messages)
         answer = response.choices[0].message['content']
         return answer
-    
+
     # 提示chatgpt
-    def ask(self,prompt,use_history = False,history_number = 5):
-        prompt = generate_prompt(prompt)
-        self.conversation_list.append({"role":"user","content":prompt})
+    def ask(self, prompt,reference=True, use_history=False, history_number=5):
+        """
+        :param prompt:问题描述
+        :param reference: 是否列出参考的资料来源
+        :param use_history: 是否参考历史对话信息
+        :param history_number: 参考历史对话信息的条数
+        :return: 此次问题的回复
+        """
+        if reference:
+            prompt = self.generate_prompt(prompt)
+        self.conversation_list.append({"role": "user", "content": prompt})
         if use_history:
-            #基于历史history_number条提问记录和当前问题进行回答,虽然会结合上下文，但是会比较耗token
-            response = self.get_answer(messages=self.system_setting_list+self.conversation_list[-history_number:])
+            # 基于历史history_number条提问记录和当前问题进行回答,虽然会结合上下文，但是会比较耗token
+            response = self.get_answer(messages=self.system_setting_list + self.conversation_list[-history_number:])
         else:
-            #只基于当前问题进行回答
-            response = self.get_answer(messages=self.system_setting_list+[{'role': 'user', 'content': prompt}])
+            # 只基于当前问题进行回答
+            response = self.get_answer(messages=self.system_setting_list + [{'role': 'user', 'content': prompt}])
         # 下面这一步是把chatGPT的回答也添加到对话列表中，这样下一次问问题的时候就能形成上下文了
-        self.conversation_list.append({"role":"assistant","content":response})
+        self.conversation_list.append({"role": "assistant", "content": response})
         return response
