@@ -25,6 +25,11 @@ class Chat:
             else:
                 print(f"\U0001f47c: {msg['content']}\n")
     
+    #清空历史会话
+    def clear_conversation(self):
+        del self.conversation_list
+        self.conversation_list = []
+        
     def generate_prompt(prompt,ask_type):
         """
         ask_type:问题类型
