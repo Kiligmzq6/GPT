@@ -9,7 +9,7 @@ class Chat:
         # 初始化对话列表，加入一个key为system的字典，有助于形成更加个性化的回答
         self.system_setting_list = [{'role':'system','content': f"以下的所有问题请用{language}回答"}]
         if system_setting:
-            self.system_setting_list.append([{'role':'system','content': system_setting}])
+            self.system_setting_list.append({'role':'system','content': system_setting})
             #添加系统设置
         self.conversation_list = []
         #对话记录
