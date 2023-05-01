@@ -2,7 +2,7 @@
 Python calls GPT code
 # 配置过程
 在进行配置之前，需要先完成以下几个步骤
- 1. 注册一个Kaggle账号并登录
+ 1. 注册一个Kaggle账号并登录（使用kaggle可以免梯子,本地编译器的话需要挂梯子）
  2. 注册一个ChatGPT账号，并申请api_key（教程自寻）
 
 在完成以上步骤之后，进入kaggle主界面，create-new notebook 新建一个笔记本
