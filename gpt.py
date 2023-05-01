@@ -30,12 +30,14 @@ class Chat:
         del self.conversation_list
         self.conversation_list = []
         
-    def generate_prompt(prompt,ask_type):
+    def generate_prompt(prompt,ask_type = None):
         """
         ask_type:问题类型
         """
         #这部分函数有待更新
-        pass
+        tail_message = "列出你所参考的资料来源,请你一步一步来,并仔细思考你的行为逻辑,核查你输出的信息。"
+        prompt = prompt+tail_message
+        return prompt
     
     def get_answer(self,messages):
         response = openai.ChatCompletion.create(model=self.model,messages=messages)
@@ -44,6 +46,7 @@ class Chat:
     
     # 提示chatgpt
     def ask(self,prompt,use_history = False,history_number = 5):
+        prompt = generate_prompt(prompt)
         self.conversation_list.append({"role":"user","content":prompt})
         if use_history:
             #基于历史history_number条提问记录和当前问题进行回答,虽然会结合上下文，但是会比较耗token
