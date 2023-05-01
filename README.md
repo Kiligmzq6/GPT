@@ -88,7 +88,9 @@ ask(self,prompt,use_history = False,history_number = 5)
 ```
 prompt: 提问的问题
 use_history:表示是否使用历史问答记录（虽然会结合上下文，但是会比较耗token）
+
 history_number:使用历史几条问答记录
+
 更多功能有待后续完善。
 
 [Github链接](https://github.com/Kiligmzq6/GPT)
